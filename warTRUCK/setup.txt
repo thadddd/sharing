@@ -14,11 +14,13 @@ warTRUCK Fresh install
 	sudo apt install timeshift aptitude
 	sudo timeshift --create
 
-sudo aptitude install libelf-dev
-	options n then yes 	
-sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf-dev rfkill iw cmake libusb-1.0-0.dev scons libncurses-dev python-dev pps-tools git-core asciidoctor python3-matplotlib manpages-dev pkg-config python3-distutils
+4. Depend Install
+	sudo aptitude install libelf-dev (n y)
+	sudo aptitude install libpcap0.8-dev (n y)
+	sudo aptitude install libnm-dev (n y) 	
+	sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf-dev rfkill iw cmake libusb-1.0-0.dev scons libncurses-dev python-dev pps-tools git-core asciidoctor python3-matplotlib manpages-dev pkg-config python3-distutils
 	
-4. Alpha drivers
+5. Alpha drivers
 	mkdir ~/drivers
 	cd ~/drivers
 	git clone https://github.com/morrownr/8821au-20210708.git
@@ -27,7 +29,7 @@ sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf
 	
 	options 8821au rtw_drv_log_level=1 rtw_led_ctrl=1 rtw_vht_enable=1 rtw_power_mgnt=0
 
-5. RTL-SDR Drivers
+6. RTL-SDR Drivers
 	cd ~/drivers
 	git clone git://osmocom.org/rtl-sdr.git
 	cd rtl-sdr
@@ -41,7 +43,7 @@ sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf
     sudo nano /etc/modprobe.d/blacklist-dvb.conf
         blacklist dvb_usb_rtl28xxu
 	
-6. GPSD Install
+7. GPSD Install
 	cd ~/drivers
 	wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.25.tar.gz
 	tar -xzf gpsd-3.25.tar.gz
@@ -56,8 +58,10 @@ sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf
 	    GPSD_SOCKET="/var/run/gpsd.sock"
 	sudo systemctl enable gpsd
 	sudo systemctl enable gpsd.socket
+
+8. Ubertooth Install
 	
-7. Kismet Install
+9. Kismet Install
 	wget -O - https://www.kismetwireless.net/repos/kismet-release.gpg.key --quiet | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
 	echo 'deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://www.kismetwireless.net/repos/apt/git/lunar lunar main' | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
 	sudo apt update
