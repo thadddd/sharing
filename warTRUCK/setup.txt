@@ -1,0 +1,49 @@
+warTRUCK Fresh install
+
+1. Enable SSH 
+	sudo apt install openssh-server openssh-client
+	sudo nano /etc/ssh/sshd_config
+		**Change PermitRootLogin prohibit.password to yes
+	sudo systemctl enable ssh
+	sudo service ssh start
+	
+2. Update
+	sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y
+	
+3. Install Timeshift
+	sudo apt install timeshift aptitude
+	sudo timeshift --create
+
+sudo aptitude install libelf-dev
+	options n then yes 	
+sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf-dev rfkill iw cmake libusb-1.0-0.dev scons libncurses-dev python-dev pps-tools git-core asciidoctor python3-matplotlib manpages-dev pkg-config python3-distutils
+	
+4. Alpha drivers
+	mkdir ~/drivers
+	cd ~/drivers
+	git clone https://github.com/morrownr/8821au-20210708.git
+	cd 8821au-20210708
+	sudo ./install-driver.sh
+	
+	options 8821au rtw_drv_log_level=1 rtw_led_ctrl=1 rtw_vht_enable=1 rtw_power_mgnt=0
+
+5. RTL-SDR Drivers
+	cd ~/drivers
+	git clone git://osmocom.org/rtl-sdr.git
+	cd rtl-sdr
+	mkdir build
+	cd build
+	cmake ../ -DINSTALL_UDEV_RULES=ON
+	make
+	sudo make install 
+	sudo ldconfig
+	sudo cp ../rtl-sdr.rules /etc/udev/rules.d/
+	
+6. GPSD Install
+	cd ~/drivers
+	wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.25.tar.gz
+	tar -xzf gpsd-3.25.tar.gz
+	cd gpsd-3.25/
+	sudo scons
+	sudo scons install
+	sudo reboot
