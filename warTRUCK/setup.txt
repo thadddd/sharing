@@ -38,6 +38,8 @@ sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf
 	sudo make install 
 	sudo ldconfig
 	sudo cp ../rtl-sdr.rules /etc/udev/rules.d/
+    sudo nano /etc/modprobe.d/blacklist-dvb.conf
+        blacklist dvb_usb_rtl28xxu
 	
 6. GPSD Install
 	cd ~/drivers
@@ -46,4 +48,17 @@ sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf
 	cd gpsd-3.25/
 	sudo scons
 	sudo scons install
-	sudo reboot
+	sudo nano /etc/default/gpsd	
+	    START_DAEMON="true"
+	    GPSD_OPTIONS="-n"
+	    DEVICES="/dev/ttyACM0"
+	    USBAUTO="true"
+	    GPSD_SOCKET="/var/run/gpsd.sock"
+	sudo systemctl enable gpsd
+	sudo systemctl enable gpsd.socket
+	
+7. Kismet Install
+	wget -O - https://www.kismetwireless.net/repos/kismet-release.gpg.key --quiet | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
+	echo 'deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://www.kismetwireless.net/repos/apt/git/lunar lunar main' | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
+	sudo apt update
+	sudo apt install kismet
