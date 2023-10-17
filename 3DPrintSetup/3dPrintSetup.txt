@@ -1,0 +1,14 @@
+Kiauh - https://github.com/dw-0/kiauh#klipper-installation-and-update-helper
+Klipper - https://github.com/Klipper3d/klipper
+Moonraker - https://github.com/Arksine/moonraker
+KlipperScreen - https://github.com/KlipperScreen/KlipperScreen
+Moonraker Telegram Bot - https://github.com/nlef/moonraker-telegram-bot
+Pretty GCode - https://github.com/Kragrathea/pgcode
+Moonraker Obico - https://github.com/TheSpaghettiDetective/moonraker-obico
+
+Install RPi OS 32bit Lite onto sd card and put in PI
+
+sudo apt-get update && sudo apt-get install git -y
+cd ~ && git clone https://github.com/dw-0/kiauh.git
+./kiauh/kiauh.sh
+
