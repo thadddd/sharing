@@ -8,6 +8,9 @@ Moonraker Obico - https://github.com/TheSpaghettiDetective/moonraker-obico
 
 Install RPi OS 32bit Lite onto sd card and put in PI
 
+sudo raspi-config
+    Update WiFi settings and expand filesystem
+
 sudo apt-get update && sudo apt-get install git -y
 cd ~ && git clone https://github.com/dw-0/kiauh.git
 ./kiauh/kiauh.sh
