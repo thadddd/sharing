@@ -32,8 +32,8 @@ opt_override=%E/kismet_site.conf
 # can be used in some situations where you are running multiple Kismet
 # instances.
 #
-server_name=warTRUCK
-server_description=my warTRUCK
+# server_name=Kismet
+# server_description=A Kismet server on a thing
 # server_location=Main office
 
 
@@ -86,6 +86,9 @@ server_announce_port=2501
 # capture socket stay bound to the loopback local interface, and additional
 # authentication - such as SSH tunnels - is used.  Check the Kismet README for
 # more information about setting up remote capture securely!
+# 
+# Remote capture can be completely disabled with remote_capture_enabled=false
+remote_capture_enabled=true
 remote_capture_listen=127.0.0.1
 remote_capture_port=3501
 
@@ -101,6 +104,14 @@ remote_capture_port=3501
 # mask_datasource_type=rtladsb
 # mask_datasource_type=rtlamr
 
+
+
+# Potential datasources can be masked from the list subsystem by interface name; this 
+# is primarily for systems which list interface you will never use and you'd like to
+# remove them from the list.  It will not actually reduce server load in probing interfaces
+# however.
+#
+# mask_datasource_interface=wlan0
 
 
 
@@ -180,7 +191,7 @@ override_remote_timestamp=true
 #
 # gps=serial:device=/dev/ttyACM0,name=laptop
 # gps=tcp:host=1.2.3.4,port=4352
-gps=gpsd:host=localhost,port=2947
+# gps=gpsd:host=localhost,port=2947
 # gps=virtual:lat=123.45,lon=45.678,alt=1234
 # gps=web:name=gpsweb
 

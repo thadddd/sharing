@@ -1,11 +1,13 @@
 warTRUCK Fresh install
 
-1. Enable SSH 
+1. Enable SSH & Auto-login
 	sudo apt install openssh-server openssh-client
 	sudo nano /etc/ssh/sshd_config
 		**Change PermitRootLogin prohibit.password to yes
 	sudo systemctl enable ssh
 	sudo service ssh start
+	sudo nano /etc/lightdm/lightdm.conf
+		uncomment line 126	
 	
 2. Update
 	sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y
@@ -18,36 +20,34 @@ warTRUCK Fresh install
 	sudo aptitude install libelf-dev (n y)
 	sudo aptitude install libpcap0.8-dev (n y)
 	sudo aptitude install libnm-dev (n y) 	
-	sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf-dev rfkill iw cmake libusb-1.0-0.dev scons libncurses-dev python-dev pps-tools git-core asciidoctor python3-matplotlib manpages-dev pkg-config python3-distutils
-	
-5. Alpha drivers
-	mkdir ~/drivers
-	cd ~/drivers
-	git clone https://github.com/morrownr/8821au-20210708.git
+	sudo apt-get install -y linux-headers-$(uname -r) build-essential bc dkms libelf-dev rfkill iw cmake libusb-1.0-0.dev scons libncurses-dev python-dev pps-tools git-core asciidoctor python3-matplotlib manpages-dev pkg-config python3-distutils ncurses-dev gnuplot libusb-dev python3-serial libcxx-serial-dev
+
+5. wifi drivers
+	mkdir ~/drivers && cd ~/drivers && git clone https://github.com/morrownr/8821au-20210708.git
 	cd 8821au-20210708
 	sudo ./install-driver.sh
-	
-	options 8821au rtw_drv_log_level=1 rtw_led_ctrl=1 rtw_vht_enable=1 rtw_power_mgnt=0
+	/etc/modprobe.d/88x2bu.conf 	
+		options 8821au rtw_drv_log_level=1 rtw_led_ctrl=1 rtw_vht_enable=1 rtw_power_mgnt=0
+	cd ~/drivers
+	git clone https://github.com/morrownr/88x2bu-20210702.git
+	cd 88x2bu-20210702 && sudo ./install-driver.sh
+	/etc/modprobe.d/88x2bu.conf 
+		blacklist rtw88_8822bu
+		options 88x2bu rtw_drv_log_level=0 rtw_led_ctrl=1 rtw_vht_enable=1 rtw_switch_usb_mode=1
 
 6. RTL-SDR Drivers
-	cd ~/drivers
-	git clone git://osmocom.org/rtl-sdr.git
-	cd rtl-sdr
-	mkdir build
-	cd build
+	cd ~/drivers && git clone git://osmocom.org/rtl-sdr.git &&	cd rtl-sdr
+	mkdir build && cd build
 	cmake ../ -DINSTALL_UDEV_RULES=ON
-	make
-	sudo make install 
+	make && sudo make install 
 	sudo ldconfig
 	sudo cp ../rtl-sdr.rules /etc/udev/rules.d/
     sudo nano /etc/modprobe.d/blacklist-dvb.conf
         blacklist dvb_usb_rtl28xxu
 	
 7. GPSD Install
-	cd ~/drivers
-	wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.25.tar.gz
-	tar -xzf gpsd-3.25.tar.gz
-	cd gpsd-3.25/
+	cd ~/drivers &&	wget http://download.savannah.gnu.org/releases/gpsd/gpsd-3.25.tar.gz
+	tar -xzf gpsd-3.25.tar.gz && cd gpsd-3.25/
 	sudo scons
 	sudo scons install
 	sudo nano /etc/default/gpsd	
@@ -60,9 +60,12 @@ warTRUCK Fresh install
 	sudo systemctl enable gpsd.socket
 
 8. Ubertooth Install
-	
+	sudo apt install libubertooth-dev libubertooth1	 ubertooth
+
 9. Kismet Install
-	wget -O - https://www.kismetwireless.net/repos/kismet-release.gpg.key --quiet | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
-	echo 'deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://www.kismetwireless.net/repos/apt/git/lunar lunar main' | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
-	sudo apt update
-	sudo apt install kismet
+	sudo apt install libmosquitto-dev build-essential git libwebsockets-dev pkg-config zlib1g-dev libnl-3-dev libnl-genl-3-dev libcap-dev libpcap-dev libnm-dev libdw-dev libsqlite3-dev libprotobuf-dev libprotobuf-c-dev protobuf-compiler protobuf-c-compiler libsensors4-dev libusb-1.0-0-dev python3 python3-setuptools python3-protobuf python3-requests python3-numpy python3-serial python3-usb python3-dev python3-websockets librtlsdr0 libubertooth-dev libbtbb-dev
+	git clone https://www.kismetwireless.net/git/kismet.git && cd kismet
+	./configure
+	make && sudo make suidinstall
+	sudo usermod -aG kismet dddd
+
